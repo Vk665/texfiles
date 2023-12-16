@@ -1,0 +1,322 @@
+\documentclass{myclass}
+
+\title{Rudin Notes}
+\author{vk}
+\date{\today}
+
+\newtheorem*{definition}{Definition}
+\newtheorem*{claim}{Claim}
+\newtheorem*{theorem}{Theorem}
+\definecolor{tcol_THM}{HTML}{DDA0DD}
+
+\tcolorboxenvironment{theorem}{boxrule=0pt,boxsep=0pt,colback=tcol_THM!30!white,
+    borderline west={4pt}{0pt}{tcol_THM},left=8pt,right=8pt,sharp corners,
+    before skip=10pt,after skip=10pt,breakable
+}
+
+\begin{document}
+
+\maketitle
+
+\section*{Chapter 2}
+
+\subsection{Set theory and cardinality}
+
+\begin{definition}
+    Two sets are of the \italic{same cardinality} if one has a bijection between the 2. And write $A \sim B$. If there is an injection from $A$ to $B$, then say $A \preceq B$.
+\end{definition}
+
+\begin{definition}
+    A poset is a set that has an order relation which is reflexive, antisymmetric and transitive.
+\end{definition}
+
+\begin{theorem}
+    The relation $\preceq$ makes all sets into a poset. In particular, $$A\preceq B\text{ and }B\preceq A \Longrightarrow A\sim B$$
+\end{theorem}
+
+\begin{prf}
+    Let $f:A\to B$ and $g:B\to A$ be injections as prescribed by the LHS of the implication.
+    From this we need to construct a bijection $h:A\to B$. We can do this via an algorithm. Think of this as making a perfect matching between the elements of $A$ and $B$.
+    \begin{enumerate}
+        \item first map $A$ to $f(A)$ via $f$.
+        \item If no elements of $B$ are left, then we are done.
+        \item If there are elements of $B$ left(call $B_0$), then map those to their images(call $A_1$) via $g$. And cut off the edges of $A_1$ that were allocated previously.
+        \item This leaves us with $B_1$, the previous neighbors of $A_1$. Now again map these to their images via $g$(call $A_2$) and cut off the previously allocated edges of $A_2$. And repeat.
+    \end{enumerate}
+    This algorithm will return a bijection between $A$ and $B$ although it takes countbaly infinite time, one can show that each element of $A$ will definitely get a neighbour of $B$ under this method and similarly for $B$.
+    \qed
+\end{prf}
+
+\begin{remark}
+    The above is called as the Cantor-Bernstein-Schroeder theorem. Try proving that there is a bijection between $(0,1)$ and $[0,1]$ without it!
+\end{remark}
+
+\begin{definition}
+    A set $A$ is \italic{countable} if $A\preceq \bb{N}$.
+\end{definition}
+
+\begin{theorem}
+    Say $B$ is a countable set and there is a bijection between a family of countable sets $\cc{F}$ and $B$. Then,
+    $$\bigcup_{A\in \cc{F}}A\text{ is countable}$$
+\end{theorem}
+\begin{prf}
+    There must be an injection from $B$ to $\bb{N}$ and consequently from $\cc{F}$ to $\bb{N}$ call it I. For each element $x$ in $\cc{F}$ define $h(x)$ to be the set with the least value of I that contains it. Such a set is uniquely defined due to the well ordering principle.
+    And this set being countable has an injection from itself to the naturals call it $g$. Now define,$$Z(x)=(I(h(x)),g(x))$$
+    This defines an injection into $\bb{N}\times \bb{N}$. And this is countable as one can see by the dictionary order on $\bb{N}\times \bb{N}$.\qed
+\end{prf}
+
+\begin{theorem}
+    No set can be in bijection with its power set.
+\end{theorem}
+\begin{prf}
+    Let a set $A$ and its power set $\cc{P}(A)$ be in bijection(call the bijection $b$). Consider the following element in the power set,
+    $$L=\{x|x\notin b(x)\}$$
+    now take $b^{-1}(L)=l$. Then,\begin{enumerate}
+        \item $l\in L\Longrightarrow l\notin b(l)$ by definition of L.
+        \item $l\notin L\Longrightarrow l\in b(l)$ by definition of L.
+    \end{enumerate}
+    Crazy contradiction! \qed
+\end{prf}
+
+\begin{remark}
+    This is called as Cantor's theorem. And it shows that $\bb{R}$ and $\bb{N}$ cannot be in bijection. 
+    \begin{center}\italic{
+        "Hold on to your seats, this is quite a charming proof."\begin{flushright}
+            -Manjunath Krishnapur\\ During UM201(2023)
+        \end{flushright}
+    }\end{center}
+\end{remark}
+
+\subsection{Metric topology}
+
+\begin{definition}
+    A metric space is a set($\Sigma$) along with a distance function $d:\Sigma\times\Sigma\to \bb{R} $  that is,
+    \begin{enumerate}
+        \item \bld{Positive} d(x,y)$\geq 0$ and $d(x,y)=0\iff x=y$
+        \item \bld{Symmetric} d(x,y)=d(y,x)
+        \item \bld{Triangular} d(x,y)+d(y,z)$\geq$ d(x,z)
+    \end{enumerate}
+\end{definition}
+
+\begin{purplebox}{Definition list!}
+    \begin{itemize}
+        \item \bld{$\delta$ Neighbourhood of $p$} refers to the set $\{x|d(x,p)<\delta\}$.
+        \item \bld{Closed $\delta$ Neighbourhood of $p$} refers to the set $\{x|d(x,p)\leq\delta\}$.
+        \item A \bld{Bounded set} is one which can be contained entirely in some neighbourhood of some point.
+        \item A set is said to be \bld{open} if all points in it have some neighbourhood entirely inside it.
+        \item A point is a \bld{limit point} of a set(X) of points if all of its neighbourhoods have some point from X.
+        \item A set is \bld{Closed} if it contains all of its limit points.
+        \item A set \bld{E is dense in X} iff all points in X are either in E or its limit points.
+        \item A point(p) is \bld{isolated} from a set if some neighbourhood of it lacks points form the set except p.
+        \item A set is \bld{perfect} if it closed and does not have any points that are isolated from it.
+    \end{itemize}
+\end{purplebox}
+
+\begin{theorem}
+    A set is closed $\iff$ Its complement is open. 
+\end{theorem}
+\begin{prf}
+    $$X\text{ is Closed}\iff X \text{ has all its limitpoints}\iff \text{points not in X are isolated from it}\iff X^c\text{ is open}$$
+    \qed
+\end{prf}
+
+\begin{theorem}
+    Arbitrary unions and finite intersections of open sets are open. Similarly for closed sets, finite unions and arbitrary intersections preserve the property of closedness.
+\end{theorem}
+\begin{prf}
+    Say $\{A_\alpha\}_{\alpha\in J}$ is a collection of open sets indexed by some set J.\\
+    First unions. say $p\in \cup_{\alpha\in J}A_\alpha$. Then $p\in A_{\beta}$ fro some $\beta\in J$. As $A_\beta$ is open
+    There is some $\delta$ nbhd of $p$ contained in $A_\beta$ and consequently in $\cup_{\alpha\in J}A_\alpha$.
+    \\
+    As for intersections, here J is finite. Say $p\in \cup_{\alpha\in J}A_\alpha$. Then for all $\beta\in J$ consider $\delta(\beta)$ the size of the nbhd around p that is in 
+    $A_\beta$. Then $\min_{\beta\in J}\delta(\beta)$ gives the size of the nbhd that is contained in $\cup_{\alpha\in J}A_\alpha$.\\
+    For closed sets just the complementing the above statements works.\qed
+\end{prf}
+
+\begin{definition}
+    Given a metric on a set X and a subset A of it, by restricting the metric to A one readily makes A into a metric space as well. This is called as a sub-metric space.
+\end{definition}
+
+\begin{definition}
+    \bld{COMPACTNESS}. A set X is said to be compact if any collection $\{B_\alpha\}_{\alpha\in J}$ of open sets whose union contains X(such a collection will here on be called as an open cover) has a 
+    finite subcollection of open sets whose union also has X in it(hereon refered to as a subcover).
+\end{definition}
+
+\begin{definition}
+    A collection of sets such that any open set of a metric space can be expresed as a union of sets from that collection is called as 
+    a bases.
+\end{definition}
+
+\begin{theorem}
+    Compactness of a set X implies the following properties for X.
+    \begin{enumerate}
+        \item \bld{Closed and Bounded}
+        \item \bld{Total Boundedness}. Given any $\epsilon>0$ there is a finite collection of $\epsilon$ neighbourhooda that contain X fully in them.
+        \item \bld{Sequential Compactness}. Given any infinite subset of X, it has a limit point.
+        \item \bld{Finite Intersection Property}. Given a collection of nested closed sets, such that any finite subcollection of them has a non-empty intersection, the whole collection has a non-empty intersection.
+    \end{enumerate}
+\end{theorem}
+\begin{prf}Here is a list of proof sketches!
+    \begin{itemize}
+        \item Take $1-nbhds$ of all poins of the space $X$. It is an open cover. Using compactness get a finite subcover. Say ther are N of them. let p be the center of one of them. Then, 4N nbhd of p must contain X as a whole.
+              this shows boundedness. Now for any point p not in X, consider the cover givenn by $\{\frac{d(p,x)}{2}\,\,nbhd\,\,of\,\,x\}_{x\in X}$. This is a cover and it must have a finite subcover. Now choose the radius around p that avoids those finitely many nbhds. 
+              This shows $X^c$ is open. Hence X is closed.
+        \item Take all the $\epsilon$ nbhds of the points of X and they form a cover. Their finite subcover yields the desired.
+        \item Say there is an infinite subset(V) that doesn't have a limit point. Then for any point p in X one can find a nbhd that contains at most one point, namely itself, from that 
+               belongs to V. And these sets do form a cover. There must be a finite subcover corresponding to it, but that means the set V must be finite too! contradiction.
+        \item Say we have a collection of nested closed sets, any finite subcollection of which have non-empty intersection. If their intersection as a whole is empty then theor complements make an
+              open cover without any finite subcover!  
+    \end{itemize}
+    \qed
+\end{prf}
+
+\begin{theorem}
+    Sequentially compact subsets of metric spaces are necessarily compact.
+\end{theorem}
+\begin{prf}
+    For this we would need another concept from point-set topology. Namely that of separable spaces.
+    \begin{definition}
+        A space is said to be separable if there is a countable Bases.
+    \end{definition}
+    \begin{claim}
+        Sequentially compact $\implies$ Totally Bounded $\implies$ Separable.
+    \end{claim}
+    \begin{subprf}
+         Assume a space X is sequentially compact. We prescribe a procedure to find an $\epsilon$ ball cover of X. Choose some point p and set it as $x_1$ and let $B_1=N_{\epsilon}(x_1)$.
+         This is the first iteration. At the $n^{th}$ iteration,
+         \begin{itemize}
+            \item If $\cup_{i\leq n}B_i$ contains X then finitely many $\epsilon$ nbhds cover X and we are done. 
+            \item If not then choose $x_{n+1}$ from $X-\cup_{i\leq n}B_i$ and set $B_{n+1}=N_\epsilon(x_{n+1})$.
+            \item Go to next iteration. 
+         \end{itemize}
+         This process must terminate after finitely many steps. If not then we will get a sequence of points such that distance between any two of them is more than $\epsilon$, hence cannot have any limit points as any nbhd of size less than $\epsilon/2$ cannot have more than one point in it.
+         Hence Finitely many $\epsilon$ balls shall cover X for any X. Now that total bounded ness is shown, for any $\epsilon$ let $\cc{C}_\epsilon$ denote a finite $\epsilon$ ball cover. Then the collection $\cup_{n\in\bb{N}}\cc{C}_{1/2^n}$ forms a bases of that space.
+         \qed
+    \end{subprf}
+    Given this, we can proceed to prescribe a procedure to find a finite subcover from an arbitrary cover. Arrange the countable bases in an order($\{b_i\}_{i\in\bb{N}}$). Traverse it and do the following to choose a subcover. For each element $b_i$ if no element of the cover chosen so far has it then check if some new element of the cover contains it. If there is choose it. If not move on. The resulting sub-cover
+    is countable and it is easy to show that it is a cover. \\
+    Now we have to reduce this countable subcover to a finite one. Here's how we go about it. Arrange the collection in an order $\{C_i\}_{i\in \bb{N}}$. Now consider the partial unions $U_i=\cup_{j\leq i}C_j$. 
+    \begin{claim}
+        For some $M\in \bb{N}$, $U_M$ contains X completely.
+    \end{claim}
+    \begin{subprf}
+        Suppose not. Then for each $n\in\bb{N}$ choose $x_n$ from the necessarily non empty set $X\ U_n$. This gives an infinite sequence
+        which is supposed to have a limit point as X is sequentially compact. Say it is x. Now consider some number $m:x\in B_m$. Then some $\delta$ nbhd of x belongs to 
+        $B_m$ and consequently to $U_m$. But then note that $U_m$ has infinitely many of $x_i's$ while by the choice of $x_i's$ ,$U_j$ can only have atmost j of the $x_i's$.
+        This is a contradiction.\qed
+    \end{subprf}
+    And the above claim finishes the required proof.\qed
+\end{prf}
+
+\begin{definition}
+    A point $p$ is said to be a condensation point of a set $X$ if all nbhds of $p$ have uncountably many 
+    points of $X$.
+\end{definition}
+
+\begin{theorem}
+    Any collection of uncountably many points E, in $\bb{R}$ has a condensation point x that is in E.
+\end{theorem}
+\begin{prf}
+    The statement to prove is,
+    $$\text{Collection is uncountable} \iff \text{Some point has all nbhds filled with uncountably many points of E}$$
+    We show the equivalent statement that,
+    $$\text{Collection is countable} \iff \text{All points have some nbhd with only countably many elements of E}$$
+    The forward direction is easy. For the other direction, let $\{\cc{U}_e\}_{e\in E}$ be the family of countable nbhds indexed by the point set e, where $e\in\cc{U}_e$.
+    Note that $\bb{R}$ has a countable bases. Just choose the balls, $\{N_{\delta}(x):x\in\bb{Q},1/\delta\in\bb{N}\}$. Call it $\{B_i\}_{i\in\bb{N}}$.
+    So, that uncountable cover can be reduced to a countable cover by the following process. Arrange the elements of the countable base in an order.
+    Then go through them one by one. If there is some element of $\{\cc{U}_e\}_{e\in E}$ that contains it and one containint it has not been yet chosen, then choose it. This generates a countable cover 
+    where each element can only have countably many points. This completes the proof as we have established that E is a countable union of countable sets.\qed
+\end{prf}
+
+\begin{theorem}
+    The set of condensation points of any uncountable subset of $\bb{R}$ is a perfect set.
+\end{theorem}
+\begin{prf}
+    Partition $\bb{R}$ into countably many sections. Say as $[n,n+1]$ for all naturals n. Atleast one of these must have uncountably many points from that set (say E).
+    Divide that further into countably many sections. This procedure gives us a sequence of nested closed intervals whse whole intersection is non-empty, Hence giving us a condensation point.
+    Now take that condensation point(p) and consider the following onion slices of some $\epsilon$ nbhd of it. $S_k=N_{\epsilon/k}- N_{\epsilon/(k+1)}$. These are countably many. hence atleast one of them has uncountable many of points of E.
+    Take that slice. It must have a condensation point by a magnifying argument similar to above. And Hence any $\epsilon$ nbhd of a condensation point has another condensation point. Also if some point is a limit point of several condensation points then it is easily shown to be a condensation point too.
+    Hence the collection of condensation points is closed.\qed
+\end{prf}
+
+\begin{remark}
+    The above is basically a problem from rudin and the second part of it is to show that 
+    Only countably many points of E can not be condensation points of E. Rudin's approach is cleaner. He 
+    lets $\{V_n\}$ be a countable base and considers the union of collection of those bases elements that have only countable many points of E.
+    The complement of these becomes the set of condensation points.\\
+    One recurring theme we have used id the following. $\bb{R}^k$ is \bld{Second Countable}. There is a countable base of $\bb{R}^k$,
+    and a procedure similar to the one used above can be used to basically reduce any cover to a countable subcover. Re ducing it to a finite subcover requires some special properties of the underlying set such as closedness and boundedness.
+\end{remark}
+
+\begin{theorem}
+    Perfect subsets of $\bb{R}$ are necessarily uncountable.
+\end{theorem}
+\begin{prf}
+    Assume the contrary. Say some set X is perfect and countable. Then call its elements $\{x_i\}_{i=1}^\infty$. The number of elements must be infinite because if not 
+    then the points are neceassarily isolated from each other. Now construct the following intervals.
+    \begin{enumerate}
+        \item $I_1$ is such that it has $x_1$ but not $x_2$.
+        \item $I_2$ is such that it does not have $x_2$ and is a subset of $I_1$.
+        \item $I_3$ does not have $x_3$ and is a subset of $I_2$
+        \item repeat!
+    \end{enumerate}
+    This gives us a sequence of nested intervals. The set $J_k=I_k\cap X$ is a sequence of nested closed sets.
+    Then their intersection must be non-empty according to finite intersection property of compact sets. But it is empty by construction.\qed
+\end{prf}
+
+\begin{theorem}
+    Say $\bb{R}=\bigcup_{i=1}^\infty F_i$ such that $\cc{F}=\{F_i\}_{i\in\bb{N}}$ is a family of closed sets. Then altleast one of those sets have a non-empty interior. 
+\end{theorem}
+\begin{prf}
+    As rudin said we shall \italic{'imitate'} the proof of the previous theorem. Assume the contrary and do the following.
+    \begin{enumerate}
+        \item \bld{First iteration:} Pick a point $x_1$ such that it is in $F_1^c$. Then, set $I_1$ to be a closed interval that avoids $F_1$. It is possible as $F_1^c$ is necessarily a non-empty open set.
+        \item \bld{nth iteration:} Pick $x_n$ such that $x_n\in F_n^c\cap I_{n-1}\neq \phi$ as $F_n$ has no interior. And set $I_n$ to be a closed subinterval of $I_{n-1}$ avoiding $F_n$. Which exists for the reasons mentioned above. 
+    \end{enumerate}
+    This generates a sequence of nested closed intervals such that $I_n\cap F_n = \phi$ with \bld{Finite Intersection Property}.
+    So their intersection would be a non-empty collection disjoint from all elements of $\cc{F}$ which contradicts the fact that those sets cover $\bb{R}$.
+\end{prf}
+
+\section*{Chapter 3}
+
+\subsection{Sequences and Convergence}
+
+\begin{definition}
+    An injective function from $\bb{N}$ to a metric space is said to be a 
+    sequence of points in that space.
+\end{definition}
+
+\begin{definition}
+    A sequence $\{p_i\}_{i\in\bb{N}}$ is said to converge to a point $p$ if given any
+    $\epsilon>0,\exists N\in\bb{N}$ such that,$$\forall n>N, d(p_n,p)<\epsilon$$
+\end{definition}
+
+\begin{remark}
+    Basically eventually the sequence must go eithin any ball around p.
+\end{remark}
+
+\begin{theorem}
+    A sequence $\{p_i\}_{i\in\bb{N}}$ converges to $p$ $\iff$ All nbhds of p have all but finitely many points of the sequence.
+\end{theorem}
+\begin{prf}
+    The forward direction is evident from the definition. For the backward direction, Assume the rhs.
+    Then for any $\epsilon$-nbhd of p, only finitely many points lie outside it. Then let the maximum index that lies outside the ball be $N$.
+    Then for all $n>N$,$d(p_n,p)<\epsilon$ which is what was required.\qed
+\end{prf}
+
+\begin{theorem}
+    If a sequence $\{p_i\}_{i\in\bb{N}}$ converges to $p_1,p_2$ both, then $p_1=p_2$.
+\end{theorem}
+\begin{prf}
+    Assume the contrary.\\
+    Let $\epsilon=d(p_1,p_2)/3$. Then $N_\epsilon(p_1),N_\epsilon(p_2)$ are disjoint and contain only one of $p_1$ or $p_2$.
+    But then only finitely many elements of the sequence lie outside the ball of $p_1$. But that means the sequence can't have infinitely many menbers in the second ball.\\
+    contradiction\qed
+\end{prf}
+
+In special spaces like the reals, we can investigate the link between convergence and the arithmetic operations.
+
+
+
+
+\end{document}

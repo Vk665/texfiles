@@ -1,0 +1,142 @@
+\documentclass{myclass}
+\title{DAA,DSA-Attempted self study}
+\author{vk}
+\newtheorem*{definition}{Definition}
+\newtheorem*{claim}{Claim}
+\date{}
+\begin{document}
+
+\maketitle
+
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    14th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+\hrule
+
+\section*{Egyptian fractions}
+
+\begin{definition}
+    A rational number which in reduced form has a numerator of 1 is called as an egyptian fraction.
+\end{definition}
+
+\bld{FACT} Ancient Egyptians who also worked with base 10 number systems, actually had in thier syntax only these type of fractions
+and all others were built from these basic fractions.
+\\\\
+\bld{Question:} Can egyptians actually write all fractions less than one in this way?
+\\\\
+\bld{Answer:} Yes as the following algortithm to obtain such an expansion shows.
+
+\begin{algorithm}
+    \caption*{Egyptifier($p/q\in \bb{Q}$)}
+    \begin{algorithmic}[1] 
+        \Ensure{$p<q \text{\bld{ and }} q\neq 0$}
+        \State nume \ass p
+        \State ret\_list \ass $[\,\,]$\hspace{0.5cm}\Comment This list will have all the denominators of the component egyptian fractions.
+        \While {nume $\neq$ 0} 
+            \State n \ass $\lceil q/p \rceil$
+            \State ret\_list.append(n)
+            \State nume \ass pn-q
+        \EndWhile\\
+        \bld{Output} ret\_list
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+    This algorithm works!
+\end{claim}
+\begin{prf}
+    The idea is to use the monovariant \italic{nume}. On each iteration, by the choice of n, nume monotonously decreases 
+    while being non-negative. This is so because,
+    $$n=\lceil q/p \rceil \iff n-1<q/p\leq n \iff 1/n\leq p/q <1/(n-1) \iff 0 \leq (pn-q)/q \text{ and }pn-q<p$$
+    \qed
+\end{prf}
+
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    15th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+\hrule
+
+\section*{Interval Scheduling}
+
+\bld{Input} Certain events given as a list of 2-tuples $(s,f)$ denoting
+the start and finish timings of the event. 
+\\\\
+\bld{Output} A sub-list of events from the original list ,that are non overlapping
+and have the maximum possible number of events.
+\\\\
+This can naturally be usefull in several settings of practical interests like
+picking the maximum number of rides in a theme park.
+
+\newpage
+
+The idea is the following. Keep picking the event that ends at the earliest, and does not clash with the ones already 
+chosen. This greedy approach is implemeted in the following way. We use the heap data structure with the following terminology.
+
+\begin{enumerate}
+    \item \bld{MinHeapify} with some order function does heapify where the comaprision is made with the given function.
+    \item \bld{Pop} removes that element from the heap.
+    \item \bld{Peek} Returns the first element from the heap.
+\end{enumerate}
+
+\begin{algorithm}
+    \caption*{Scheduler(L:list of event tuples)}
+    \begin{algorithmic}[1]
+        \State S \ass MinHeapify(L) with start time ordering.
+        \State F \ass MinHeapify(L) with end time ordering.
+        \State Ret\_list \ass $[\,\,]$
+        \While{F \bld{not empty}}
+            \State e \ass Peek(F)
+            \State s \ass Peek(S)
+            \While{$s[0]\leq e[1]$}
+                \State S.Pop(s)
+                \State F.Pop(s)
+                \State s \ass Peek(S)
+            \EndWhile
+            \State Ret\_list.append(e)
+        \EndWhile\\
+        \bld{Output} Ret\_list
+    \end{algorithmic}
+\end{algorithm}
+
+\begin{claim}
+    This algorithm does return a list with maximum number of non-clashing(here after referred as compatible)
+    events.
+\end{claim}
+
+\begin{prf}
+    Say $\cc{O}$ is a list of events with $m$ elements such that it has the maximal number of compatible events.
+    Let $R$ be the returned list. We shall prove that $|R|=|\cc{O}|$.\\
+    The idea is that the greedy algorithm always stays ahed of this optimal list.
+
+    \begin{claim}
+        $R[i][1]\leq\cc{O}[i][1]$
+    \end{claim}
+    \begin{subprf}
+        We prove by induction. For the first step its clear by design. We assume the statement holds for $j-1$. 
+        But if so, then in the $jth$ step, $\cc{O}[j]$ begins after $\cc{R}[j-1]$ ends. Since the algorithm chooses the event with least finish
+        time that does not clash with the existing ones, the above statement follows.
+        \qed
+    \end{subprf}
+
+    Consequently, If the list $\cc{O}$ has got some $m$ events, then $R$ has atleast those many events.\qed
+\end{prf}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
