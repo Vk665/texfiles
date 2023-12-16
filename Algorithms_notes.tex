@@ -127,7 +127,61 @@ chosen. This greedy approach is implemeted in the following way. We use the heap
     Consequently, If the list $\cc{O}$ has got some $m$ events, then $R$ has atleast those many events.\qed
 \end{prf}
 
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    16th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+\hrule
 
+\section*{Weighted Interval Scheduling}
+
+Not all rides in a theme park are equally liked. Some are better than others. Say this is denoted by their weight.
+How do we pick a compatible set of rides with the largest wieght?
+
+\bld{Input} List of tuples of events and corresponding weights.
+\\\\
+\bld{Output} Sub-list of the input such that the events are all compatible and 
+add to maximal weight.
+\\\\
+The idea is again simple. We shall build the set slowly such that at all points 
+the list has the heaviest-compatible list upto a certain finish time. When the finish time of a new event is encountered, the weight of having it compared with the
+weight of not having it. Correspondingly the list is updated.
+\\\\
+The procedure can be described as follows.
+
+\begin{enumerate}
+    \item Sort the evests with start times and finish times.
+    \item Pick the event that ends the earliest.
+    \item Move to the event that ends second earliest.
+    \item If no clash, add it. If clashed, compare and choose.
+    \item At an arbitrary state, say the max finish time of chosen events is f. Move to the event that ends after but closest to f. 
+    \item If no clash add it. If clashed, compare having it and not having it, based on which wether to choose it.
+    \item Go through all events.
+\end{enumerate}
+
+Here is a pseudocode.
+
+\begin{algorithm}
+    \caption*{Weighted-scheduler(E:list of 3-tuples)}
+    \begin{algorithmic}[1]
+        \State F \ass Sort(E) with finish key.
+        \State Ret\_list \ass $[\,\,]$
+        \State Part-sums \ass $[\,\,]$
+        \Procedure{Find-Clash}{L:list of compatible events,e:some event}
+            \State Binary-Search to return the index of the least element that clashes with e in L
+        \EndProcedure
+        \For{e \bld{in} F}
+            j \ass Find-Clash(Ret\_list,e) 
+            \If{Part-sums[j-1]+e[3]>Part-sums[-1]}
+                \State Ret\_list \ass Ret\_list[0:j-1].append(e)
+                \State Part-sums \ass Part-sums[0:j-1].append(Part-sums[j-1]+e[3])
+            \EndIf
+        \EndFor
+        \bld{Output} Ret\_list
+    \end{algorithmic}
+\end{algorithm}
 
 
 
