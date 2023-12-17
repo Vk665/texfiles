@@ -173,22 +173,124 @@ Here is a pseudocode.
             \State Binary-Search to return the index of the least element that clashes with e in L
         \EndProcedure
         \For{e \bld{in} F}
-            j \ass Find-Clash(Ret\_list,e) 
-            \If{Part-sums[j-1]+e[3]>Part-sums[-1]}
+            \State j \ass Find-Clash(Ret\_list,e) 
+            \If{Part-sums[j-1]+e[3]$>$Part-sums[-1]}
                 \State Ret\_list \ass Ret\_list[0:j-1].append(e)
                 \State Part-sums \ass Part-sums[0:j-1].append(Part-sums[j-1]+e[3])
             \EndIf
-        \EndFor
+        \EndFor\\
         \bld{Output} Ret\_list
     \end{algorithmic}
 \end{algorithm}
 
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    17th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+\hrule
 
+\section*{Coins problem and Dynamic programming}
 
+\bld{Question} Say there are certain denominations of coins, and you have to give a certain 
+total amount of money to someone. What is the least amount of coins needed?
+\\\\
+Ofcourse this is a problem of high interest. Given a set of denominations $\cc{D}$ ans a target money T,
+let $M(n,\cc{D})$ denote our answer, A smallest list of coins of total T. Then our solution is as follows.
+$$M(n,\cc{D}) = \text{argmin }len\{(M(n-d,\cc{D})).\text{append}(d)|d\in\cc{D}\}$$
+Now this basically reduces the problem of solving a bigger problem into solving a lot of subproblems.
+So we essentially do not want to solve the subroblems repeatedly. Hence we need a register of the subproblems that have been solved.
+Such an approach to breaking down problems is called as dynamic programming. First we shall write the brute force algortihm.
 
+\vspace{-0.1cm}
+\begin{algorithm}
+    \caption*{Brute-force(T:total,$\cc{D}$:List of denominations)}
+    \begin{algorithmic}[1]
+        \If{$T\leq 0$}
+            \State \bld{Output} $[]$
+        \EndIf
+        \State Ret\_list \ass $[]$
+        \Procedure{Convinient-min}{$a,b$}
+            \If{a \italic{isempty}}
+                \State \bld{Output} b
+            \ElsIf{b \italic{isempty}}
+                \State \bld{Output} a
+            \Else 
+                \State \bld{Output} lesser length list of the two.
+            \EndIf
+        \EndProcedure
+        \For {$d\in\cc{D}$}
+            \State temp \ass Brute-force($T-d,\cc{D}$)
+            \State Ret\_list \ass Convinient-min(temp,Ret\_list)
+        \EndFor
+        \State \bld{Output} Ret\_list
+    \end{algorithmic}
+\end{algorithm}
 
+\newpage
 
+Here it is easily seen that the same sub-problem is solved many times in different 
+calls of the function. We can greatly save this time by just using memory. Consider the modified code below.
+Here the curly brace $\{\,\,\,\}$ denotes an empty dictionary. (The code in in the next page)
+This is code is many times fater because it only calls the function reursively $\cc{O}(n)$ time,
+which is much better, than the exponentially large number of recursive calls made otherwise.
+\\
+We can recast the same idea in a bottom up manner. We see that we reduce the problem to that sub-problem that has the most optimal output.
+We shall call that sub-problem its prdecessor. Here is the implementation.
+\begin{algorithm}
+    \caption*{Bottom-up-formulation(T:total,$\cc{D}$:List of denominations)}
+    \begin{algorithmic}[1]
+        \State Pre \ass $arr[T+1]$   \Comment{array of length T+1}
+        \State Number \ass $arr[T+1]$   \Comment{array of length T+1}
+        \State Pre[0],Number[0],i \ass 0,0,1
+        \While{$i \leq T$}
+            \State Temp \ass $\infty$
+            \For{$d\in\cc{D}$ \bld{and} $d \leq i$}
+                \If{Temp>Number[i-d]} 
+                    \State Pre[i] \ass i-d 
+                    \State Number[i] \ass Number[i-d]+1
+                \EndIf
+            \EndFor
+        \State i \ass i+1
+        \EndWhile
+        \State \bld{Output} Number[T+1]
+    \end{algorithmic}
+\end{algorithm}
 
+The optimal sequence of coins can be inferred from the predecessor list. Follow the predecessor of T until you hit zero. The
+succesive differences of the generated sequence is the list of coins.
+
+\newpage
+\begin{algorithm}
+    \caption*{Brute-force-withmemory(T:total,$\cc{D}$:List of denominations)}
+    \begin{algorithmic}[1]
+        \If{$T\leq 0$}
+            \State \bld{Output} $[]$
+        \EndIf
+        \State memo \ass $\{\,\,\,\}$   \Comment{Entries stored as $T:Min(T,\cc{D})$}
+        \If{T \bld{in} memo}
+            \State \bld{Output} memo[T]
+        \EndIf
+        \State Ret\_list \ass $[]$
+        \Procedure{Convinient-min}{$a,b$}
+            \If{a \italic{isempty}}
+                \State \bld{Output} b
+            \ElsIf{b \italic{isempty}}
+                \State \bld{Output} a
+            \Else 
+                \State \bld{Output} lesser length list of the two.
+            \EndIf
+        \EndProcedure
+        \For {$d\in\cc{D}$}
+            \State temp \ass Brute-force($T-d,\cc{D}$)
+            \State Ret\_list \ass Convinient-min(temp,Ret\_list)
+        \EndFor
+        \State memo.add(T:Ret\_list)
+    \end{algorithmic}
+\end{algorithm}
+
+The correctness of these procedures is guarenteed by the recursive relation that they solve.
 
 
 
