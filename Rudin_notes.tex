@@ -292,7 +292,7 @@
 \end{definition}
 
 \begin{remark}
-    Basically eventually the sequence must go eithin any ball around p.
+    Basically eventually the sequence must go within any ball around p.
 \end{remark}
 
 \begin{theorem}
@@ -313,6 +313,60 @@
     But then only finitely many elements of the sequence lie outside the ball of $p_1$. But that means the sequence can't have infinitely many menbers in the second ball.\\
     contradiction\qed
 \end{prf}
+
+In a space like $\bb{R}^k$ one can talk about the interplay of arithmetic operations and convergence.
+
+\begin{theorem}
+    Given two sequences \seq{p_i} and \seq{q_i} of complex numbers, and their limits say $P,Q$,
+    \begin{itemize}
+        \item \seq{p_i+q_i} converges to $P+Q$.
+        \item \seq{p_iq_i} converges to $PQ$.
+        \item \seq{cp_i} for some real constant c converges to $cP$.
+        \item \seq{p_i/q_i} given $q_i\neq 0$ for all $i$ and $Q\neq 0$ converges to $P/Q$
+    \end{itemize}
+\end{theorem}
+\begin{prf}
+    We prove them one by one.
+    \begin{itemize}
+        \item Let $N_1,N_2$ be that points after which the sequences $p_i,q_i$ get within $\epsilon/2$ nbhds of their corresponding limits. Then after max{$N_1,N_2$} we get the desired.
+        \item Observe the following.$$|PQ-p_iq_i|=|(P-p_i)(Q-q_i)+(P-p_i)q_i+(Q-q_i)p_i|\leq |(P-p_i)(Q-q_i)|+|(P-p_i)||q_i|+|(Q-q_i)||p_i|$$ and alll the 3 terms can be shown to get arbitrarily small.
+        \item This one is trivial.
+        \item Obsereve the following. For sufficiently large $i$, $|q_i-Q|\leq |Q|/2 \Rightarrow |q_i|>|Q|/2$ $$|1/q_i-1/Q|=|(Q-q_i)/Qq_i|\leq \frac{2}{|Q|^2}|Q-q_i|$$ and this does die out.\qed
+    \end{itemize}
+\end{prf}
+
+Sequences are great, particularly the ones that converge. But their definition includes the limit itself. Meaning we can'e deduce convergence untill we know the limit! Here's cauchy's way around it.
+
+\begin{definition}
+    A sequence \seq{p_i} is said to be \bld{cauchy} if for all $\epsilon$ ther is a natural number $M$ such that,
+    $$|p_n-p_m|<\epsilon\,\,\,\forall n,m>M$$
+\end{definition}
+
+But cauchy sequences need not necessarily converge in all metric spaces. Say in rationals, the decimal approximation of all irrational numbers is an example.
+But its not the case in $\bb{R}$.
+
+\begin{definition}
+    Any metric space where all of its cauchy sequences have a limit is called as a Complete metric space.
+\end{definition}
+
+\begin{theorem}
+    $\bb{R}$ is complete.
+\end{theorem}
+\begin{prf}
+    Given a cauchy sequence \seq{p_i}, its easy to see that its bounded. Say on the interval $[-M,M]$.
+    Now chop the interval in half. One of the intervals will necessarily have infinitely many pionts.
+    Choose that interval and continur the bisection. This yields a set of nested intervals, wich all have one point in common,
+    the point which we shall call limit!\\
+    Its easy to see that any nbhd of this point has infinitely many points of \seq{p_i}. The key argument is that given any nbhd, only finitely many lie outside it.
+    This follows from cauchyness.\qed
+\end{prf}
+
+\begin{definition}
+    In a metric space, any function that takes convergent subsequences to convergent subsequences is a continuous function.
+\end{definition}
+
+
+
 
 
 
