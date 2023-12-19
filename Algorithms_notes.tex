@@ -303,8 +303,142 @@ following operations.
     \item \bld{DELETE(key)} procedure removes the value associated with a certain key.
 \end{itemize}
 
-An implementation of it using binary search trees.
-Checking if things are still fine.
+An implementation of it using binary search trees is possible and will be discussed later.
+
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    18th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+\hrule
+
+\section*{Knap-sack problem an interlude}
+
+\bld{Question} Say there are certain items with certain weights and values. What is the maximum value of items that can be put into a knapsack of a certain capacity?
+\\\\
+Say a set if items($\cc{I}$) is give with values given by the $ val:\cc{I} \to \bb{R} $ function, and weights given by the $ wt:\cc{I} \to \bb{R} $ function, 
+we need to find $S\subseteq I$ such that, $$\sum_{s\in S}val(s)\text{ is maximized under the constraint }\sum_{s\in S}wt(s)\leq C$$
+where $C$ is the capacity of the knapsack.  
+\\\\
+Turns out this is quite a challenging problem. A polynomial time algorithm for the general case is not known for this problem. 
+However, there is a polynomial time algorithm for the special case where the weights are integers. We shall see that algorithm here.
+\\\\
+The idea is to use dynamic programming. We shall define a function $M(i,c)$ that gives the maximum value of items that can be put into a knapsack of capacity $c$,
+using only the first $i$ items. We shall see that this function can be computed in a bottom up manner.
+\\\\
+The recursive relation is as follows.
+$$M(i,c) = \text{max}\{M(i-1,c),M(i-1,c-wt(i))+val(i)\}$$
+The first term in the max is the case where the $i$th item is not taken, and the second term is the case where it is taken.
+Here is the pseudocode.
+
+\begin{algorithm}
+    \caption*{Knap-sack($\cc{I}$:set of items,$wt:\cc{I}\to\bb{R}$:weight function,$val:\cc{I}\to\bb{R}$:value function,$C$:capacity)}
+    \begin{algorithmic}[1]
+        \State $M$ \ass $arr[|\cc{I}|+1][C+1]$
+        \For{i \bld{in} $[0,|\cc{I}|]$}
+            \State $M[i][0]$ \ass $0$
+        \EndFor
+        \For{c \bld{in} $[0,C]$}
+            \State $M[0][c]$ \ass $0$
+        \EndFor
+        \For{i \bld{in} $[1,|\cc{I}|]$}
+            \For{c \bld{in} $[1,C]$}
+                \If{$wt(i)\leq c$}
+                    \State $M[i][c]$ \ass $\text{max}\{M[i-1][c],M[i-1][c-wt(i)]+val(i)\}$
+                \Else
+                    \State $M[i][c]$ \ass $M[i-1][c]$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \bld{Output} $M[|\cc{I}|][C]$
+    \end{algorithmic}
+\end{algorithm}
+
+even when the weights are not integers we can use this algortihm by scaling by a factor or reducing the step size.
+
+\hrule
+\vspace{-0.15cm}
+\begin{flushleft}
+    19th Dec 2023
+\end{flushleft}
+\vspace{-0.15cm}
+
+\section*{Dictionary DS continued...}
+
+We shall treat nodes as objects with the following attributes,
+
+\begin{enumerate}
+    \item \bld{key} a number serving as its name.
+    \item \bld{val} the data stored in the node. If homogenity is needed then pointers can be stored instead of values.
+    \item \bld{left} is a pointer to the left node.
+    \item \bld{right} is a pointer to the right node.
+\end{enumerate}
+
+Having these consider the following operations.
+
+\begin{algorithm}
+    \caption*{INSERT(val,key,root)}
+    \begin{algorithmic}[1]
+        \State ptr \ass root
+        \Procedure{Navigate}{ptr,key}
+            \If{*ptr.key $>$ key}
+                \State \bld{Output} *ptr.left
+            \Else 
+                \State \bld{Output} *ptr.right
+            \EndIf
+        \EndProcedure
+        \State temp \ass Navigate(ptr,key)
+        \While{temp \bld{!=} NULL}
+            \State ptr \ass temp
+            \State temp \ass Navigate(ptr,key)
+        \EndWhile
+        \If{*ptr.key $>$ key}
+            \State (*ptr.left).key \ass key
+            \State (*ptr.left).val \ass val
+        \Else 
+            \State (*ptr.right).key \ass key
+            \State (*ptr.right).val \ass val
+        \EndIf
+    \end{algorithmic}
+\end{algorithm}
+
+For searching basically go through the same process. Except in the last If block instead assigning the key and val,
+you can check the key and read the val. Deletion is more complicated.
+
+\begin{algorithm}
+    \caption*{DELETE(key,root)}
+    \begin{algorithmic}[1]
+        \State ptr \ass root
+        \Procedure{Find}{ptr,key}
+            \If{*ptr.key $>$ key}
+                \State \bld{Output} *ptr.left
+            \ElsIf{*ptr.key $<$ key} 
+                \State \bld{Output} *ptr.right
+            \Else 
+                \State \bld{Output} FOUND
+            \EndIf
+        \EndProcedure
+        \State temp \ass ptr
+        \While{temp \bld{!=} FOUND}
+            \State ptr \ass temp
+            \State temp \ass Navigate(temp,key)
+        \EndWhile
+        \If{*temp.left \bld{!=} NULL}
+            \State temp\_1 \ass *ptr.left
+            \While{*(*temp\_1.right).right \bld{!=} NULL}
+                \State temp\_1 = *temp\_1.right
+            \EndWhile
+            \State ins \ass *temp\_1.right
+            \State *temp\_1.right \ass *(*temp\_1.right).left
+            \State *ptr.
+        \EndIf
+
+
+
+    \end{algorithmic}
+\end{algorithm}
+
 
 
 

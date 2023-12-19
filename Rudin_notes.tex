@@ -360,12 +360,61 @@ But its not the case in $\bb{R}$.
     Its easy to see that any nbhd of this point has infinitely many points of \seq{p_i}. The key argument is that given any nbhd, only finitely many lie outside it.
     This follows from cauchyness.\qed
 \end{prf}
+
 \begin{remark}
     Infact, $\bb{R}$ is the completion of $\bb{Q}$ where completion is a procedure by which spaces which are not complete can be made into ones that are.
 \end{remark}
+
+\begin{theorem}
+    Compact spaces are complete. 
+\end{theorem}
+\begin{prf}
+    Cauchy sequences are essentially infinite sets that can have only one 
+    limit point. And they are supposed to have atleast one by sequential compactness.
+\end{prf}
+
+\begin{enumerate}
+    \item Limit superior and Limit inferior.
+    \item Series.
+    \item Convergence criteria.
+    \item Abel Summation formula.
+    \item Cauchy product.
+    \item Absolute Convergence and permutation theorem.
+\end{enumerate}
+TO BE DONE!
+
+\begin{redbox}{Problem}
+    Given a sequence \seq{s_i} consider the sequence \seq{\sigma_i} defined as,
+    $$\sigma_n = \frac{\sum_{i=0}^{n}s_i}{n+1}$$
+    Then proove the following,
+    \begin{itemize}
+        \item $s_n \rightarrow L \Rightarrow \sigma_n\rightarrow L$
+        \item $\sigma_n\rightarrow L \text{ and }|n(s_n-s_{n-1})|\leq M \Rightarrow s_n \rightarrow L $
+    \end{itemize}
+\end{redbox}
+\newpage
+\begin{prf}
+    We prove the 2 results separately.
+    \begin{itemize}
+        \item Say suppose M is the number such that $\forall n>M$, $|s_n - L|<\epsilon/2$.
+                $$|\sigma_m - L| \leq  \frac{1}{m+1}\sum_{i=0}^{M}|s_i - L|+\frac{1}{m+1}\sum_{i=M+1}^{m}|s_i - L| \leq \frac{1}{m+1}\sum_{i=0}^{M}|s_i - L| + \epsilon\frac{m-M}{2(m+1)} $$
+                The rhs does to $\epsilon/2$ as $m$ goes to $\infty$. So we can choose m such that the above is bounded below $\epsilon$. This establishes the limit.
+        \item First rephrase. Consider the sequence $e_n := s_n - L$. Then the given can be tarnslated as,
+                $$\frac{\sum_{i=0}^{n}e_i}{n+1}\rightarrow 0\text{ and } |e_n - e_{n-1}|\leq \frac{M}{n} \Rightarrow e_n \rightarrow 0$$
+            Assume the contrary. Say suppose for some $\epsilon$, there is a subsequence \seq{e_{m_i}} such that,$|e_{m_i}|>\epsilon$. Then,
+            fix some $m_i$. Sice the sequences succesive differences are dying down, it becomes harder for the sequenc to go back to zero once it jumped up.
+            precisely, say is $m'_i$ is the number such that $|e_{m'_i}|<\epsilon/2$ for the first time after the spike at $m_i$. Then,
+            $$\epsilon/2 < |e_{m_i}-e_{m'_i}| < \sum_{j=m_i}^{m'_i-1}|e_{j+1}-e_j| < M\sum_{j=m_i}^{m'_i-1}\frac{1}{j} < M_o ln\frac{m'_i}{m_i} \Rightarrow m'_i > m_ie^{\frac{\epsilon}{2M_o}}$$ 
+            Then one can say that,$$\sigma_{cm_i} = \frac{m_i\sigma_{m_i} + \sum_{j = m_i+1}^{cm_i}e_j}{cm_i+1} \geq \sigma_{m_i}\frac{1}{c+1/m_i}+\frac{\epsilon}{2}(c-1)\frac{m_i}{m_i+1} $$
+            Taking the limit on both sides, gives a contradiction.\qed
+            
+    \end{itemize}
+\end{prf}
+
 \begin{definition}
     In a metric space, any function that takes convergent subsequences to convergent subsequences is a continuous function.
 \end{definition}
+
 
 
 
